@@ -1,0 +1,6 @@
+{
+    "sketch": "cansat-jun-rewrite.ino",
+    "board": "arduino:avr:micro",
+    "port": "COM3",
+    "output": "./ArduinoOutput"
+}
