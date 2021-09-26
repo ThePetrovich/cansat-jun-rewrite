@@ -21,19 +21,7 @@ static long b5;
 static unsigned int ac4;
 static const unsigned char OSS = 0;
 
-char bmp085_read(unsigned char address)
-{
-    Wire.beginTransmission(BMP085_ADDRESS);
-    Wire.write(address);
-    Wire.endTransmission();
-    Wire.requestFrom(BMP085_ADDRESS, 1);
-    
-    delay(2);
-
-    return Wire.read();
-}
-
-int bmp085_readInt(unsigned char address)
+static int bmp085_readInt(unsigned char address)
 {
     unsigned char msb, lsb;
 
@@ -42,7 +30,7 @@ int bmp085_readInt(unsigned char address)
     Wire.endTransmission();
     Wire.requestFrom(BMP085_ADDRESS, 2);
 
-    delay(2);
+    while(Wire.available() < 2);
 
     msb = Wire.read();
     lsb = Wire.read();
@@ -101,7 +89,7 @@ long bmp085_getPressure(unsigned long up)
     x3 = x1 + x2;
     b3 = (((((long)ac1) * 4 + x3) << OSS) + 2) >> 2;
 
-    /* Сенсор от бош - мозги ебошь */
+    /* Сенсор от бош - мозги еб*шь */
     x1 = (ac3 * b6) >> 13;
     x2 = (b1 * ((b6 * b6) >> 12)) >> 16;
     x3 = ((x1 + x2) + 2) >> 2;
@@ -158,8 +146,6 @@ unsigned long bmp085_readUP()
     Wire.write(BMP085_OUT);
     Wire.endTransmission();
     Wire.requestFrom(BMP085_ADDRESS, 3);
-
-    unsigned long int start = millis();
 
     delay(5);
 

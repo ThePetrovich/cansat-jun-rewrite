@@ -10,26 +10,21 @@
 #include <Wire.h>
 #include "sensors.h"
 #include "telemetry.h"
-//#include "sched.h"
 #include "chute.h"
-//#include "jobs.h"
 #include "l3g4200d.h"
 #include "adxl345.h"
 #include "hmc5883.h"
 #include "bmp085.h"
-
-/* ОСТОРОЖНО! Глобальная структура, должна быть объявлена в cansat-jun-rewrite.ino */
-/* ничего умнее не придумал ахахаха */
-extern struct telemPacketStruct_t mainTelem;
+#include "pins.h"
 
 L3G4200D gyro;
 
 static float baseAlt = 0;
 
-void job_sensors_readIMU(void *);
-void job_sensors_readAll(void *);
+void job_sensors_readIMU();
+void job_sensors_readAll();
 
-void sensors_init(sSched_t* sched)
+void sensors_init()
 {
     Wire.begin();
 	
@@ -46,9 +41,8 @@ void sensors_init(sSched_t* sched)
 	adxl345_init();
 }
 
-void job_sensors_readIMU(void *)
+void sensors_read()
 {
-    Serial.println(F("Reading IMU"));
     gyro.read();
 
     /* 0,1,2 = aX,aY,aZ; 3,4,5 = mX,mY,mZ; 6,7,8 = hX,hY,hZ */
@@ -63,31 +57,75 @@ void job_sensors_readIMU(void *)
     mainTelem.rawIMU[6] = gyro.g.x;
     mainTelem.rawIMU[7] = gyro.g.y;
     mainTelem.rawIMU[8] = gyro.g.z;
-}
 
-void job_sensors_readAll(void *)
-{
-    Serial.println(F("Reading ALL"));
     mainTelem.a = sqrt(mainTelem.rawIMU[0]*mainTelem.rawIMU[0] + mainTelem.rawIMU[1]*mainTelem.rawIMU[1] + mainTelem.rawIMU[2]*mainTelem.rawIMU[2]);
     mainTelem.temperature = bmp085_getTemperature(bmp085_readUT());
     mainTelem.pressure = bmp085_getPressure(bmp085_readUP());
     mainTelem.altitude = bmp085_calcAltitude(mainTelem.pressure) - baseAlt;
-    mainTelem.vbat = analogRead(SENSOR_BAT); 
+    mainTelem.vbat = ((float)analogRead(SENSOR_BAT) / 1024.0) * SENSOR_VREF * SENSOR_VDIV * 10; 
     mainTelem.light = analogRead(SENSOR_LIGHT);
 
     if (mainTelem.a > 12 && !mainTelem.startPoint) {
-        mainTelem.startPoint = true;
+        mainTelem.startPoint = 1;
     }
 
     if (mainTelem.a > 12 && mainTelem.recoveryPoint) {
-        mainTelem.landingPoint = true;
+        mainTelem.landingPoint = 1;
     }
 
     if (mainTelem.light >= mainTelem.lightInside && !mainTelem.separatePoint) {
-        mainTelem.separatePoint = true;
+        mainTelem.separatePoint = 1;
     }
 
     if (mainTelem.separatePoint && !mainTelem.recoveryPoint) {
         chute_deploy(2000);
+    }
+}
+
+void sensors_selfTest()
+{
+    telem_sendMessage("Running Power-On Self Test (POST)");
+
+    sensors_read();
+
+    if (mainTelem.rawIMU[0] + mainTelem.rawIMU[1] + mainTelem.rawIMU[2] != 0) {
+        mainStatus.adxl = 1;
+        telem_sendMessage("ADXL OK");
+    }
+    else {
+        telem_sendMessage("ADXL FAIL");
+    }
+
+    if (mainTelem.rawIMU[3] + mainTelem.rawIMU[4] + mainTelem.rawIMU[5] != 0) {
+        mainStatus.hmc = 1;
+        telem_sendMessage("HMC OK");
+    }
+    else {
+        telem_sendMessage("HMC FAIL");
+    }
+
+    if (mainTelem.rawIMU[6] + mainTelem.rawIMU[7] + mainTelem.rawIMU[8] != 0) {
+        mainStatus.l3g = 1;
+        telem_sendMessage("L3G OK");
+    }
+    else {
+        telem_sendMessage("L3G FAIL");
+    }
+
+    if (mainTelem.pressure != 0) {
+        mainStatus.bmp = 1;
+        telem_sendMessage("BMP OK");
+    }
+    else {
+        telem_sendMessage("BMP FAIL");
+    }
+
+    if (mainStatus.adxl + mainStatus.hmc + mainStatus.l3g + mainStatus.bmp == 4) {
+        mainStatus.init = 1;
+        mainTelem.ready = 1;
+        telem_sendMessage("POST PASS");
+    }
+    else {
+        telem_sendMessage("POST FAIL");
     }
 }

@@ -12,50 +12,28 @@
 #include <SoftwareSerial.h>
 #include <stdio.h>
 #include "telemetry.h"
-#include "sched.h"
+#include "pins.h"
 
-/* ОСТОРОЖНО! Глобальная структура, должна быть объявлена в cansat-jun-rewrite.ino */
-/* ничего умнее не придумал ахахаха */
-extern struct telemPacketStruct_t mainTelem;
+struct telemPacketStruct_t mainTelem;
+struct telemStatusStruct_t mainStatus;
+
 
 SoftwareSerial radio(TELEM_RXPIN, TELEM_TXPIN);
 
-void job_telem_sendBasic(void *);
-void job_telem_sendVerbose(void *);
-
-void telem_init(sSched_t* sched)
+void telem_init()
 {   
     radio.begin(9600);
     SD.begin(TELEM_SDCSPIN);
 }
 
-void telem_sendMessage(char* msg)
+void telem_sendMessage(String msg)
 {
     Serial.println(msg);
     radio.println(msg);
 }
 
-/*
-struct telemPacketStruct_t 
-{
-    char teamId[3];
-    unsigned long int time;
-    int altitude;
-    float a;
-    float vbat;
-    int light;
-    int lightInside;
-    bool startPoint;
-    bool separatePoint;
-    bool recoveryPoint;
-    bool landingPoint;
-    long int pressure;
-    int temperature;
-    float rawIMU[9];
-};*/
-
 /* TeamID;Time;Altitude;A;Start point;Separate point;Recovery point;Landing point \n  */
-void job_telem_sendBasic(void *)
+void telem_sendBasic()
 {
     Serial.println("Sending data");
     char data[100] = "";
@@ -72,14 +50,15 @@ void job_telem_sendBasic(void *)
     radio.println(data);
 }
 
-void job_telem_sendVerbose(void *)
+void telem_sendVerbose()
 {
     Serial.println("Sending data");
     char data[200] = "";
 
     File dataFile = SD.open("cosmo14.log", FILE_WRITE);
 
-    sprintf(data, "%s;%ld;%d;%d;%d;%d;%d;%d;%d;%d;%d;%d;%d;%d;%d;%d;%d;%d;","CS", 
+    /* 0,1,2 = aX,aY,aZ; 3,4,5 = mX,mY,mZ; 6,7,8 = hX,hY,hZ */
+    sprintf(data, "%s;%ld;%d;%d;%d;%d;%d;%d;%d;%d;%d;%d;%ld;%d;%d;%d;%d;%d;","CS", 
                                                                             millis(), 
                                                                             mainTelem.altitude, 
                                                                             mainTelem.rawIMU[0], 

@@ -9,34 +9,45 @@
 #ifndef _CJUN_TELEM_H
 #define _CJUN_TELEM_H
 
-#include "sched.h"
-
-#define TELEM_TXPIN 5
-#define TELEM_RXPIN 6
-#define TELEM_SDCSPIN 4
-
 struct telemPacketStruct_t 
 {
     char teamId[3];
     unsigned long int time;
     int altitude;
-    float a;
-    float vbat;
+    int a;
+    int vbat;
     int light;
     int lightInside;
-    bool startPoint;
-    bool separatePoint;
-    bool recoveryPoint;
-    bool landingPoint;
+    short int ready;
+    short int test;
+    short int startPoint;
+    short int separatePoint;
+    short int recoveryPoint;
+    short int landingPoint;
+    short int indication;
     long int pressure;
     int temperature;
-    float rawIMU[9]; /* 0,1,2 = aX,aY,aZ; 3,4,5 = mX,mY,mZ; 6,7,8 = hX,hY,hZ */
+    int rawIMU[9]; /* 0,1,2 = aX,aY,aZ; 3,4,5 = mX,mY,mZ; 6,7,8 = hX,hY,hZ */
 };
 
-void telem_init(sSched_t* sched);
-void telem_sendMessage(char* msg);
+struct telemStatusStruct_t
+{
+    short int adxl;
+    short int l3g;
+    short int hmc;
+    short int bmp;
+    short int init;
+};
 
-void job_telem_sendBasic(void *);
-void job_telem_sendVerbose(void *);
+/* ОСТОРОЖНО! Глобальная структура, должна быть объявлена в telemetry.cpp */
+/* ничего умнее не придумал ахахаха */
+extern struct telemPacketStruct_t mainTelem;
+extern struct telemStatusStruct_t mainStatus;
+
+void telem_init();
+void telem_sendMessage(String msg);
+
+void telem_sendBasic();
+void telem_sendVerbose();
 
 #endif /* _CJUN_TELEM_H */

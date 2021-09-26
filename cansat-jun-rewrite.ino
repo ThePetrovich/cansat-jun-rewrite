@@ -1,45 +1,57 @@
 /*
  * cansat-jun-rewrite.ino
+ * Version: 0.0.1
  * 
  * Created: 28.06.2021 12:12:39
  * Author: ThePetrovich
  * Rewriting cansat-jun from scratch because fuck my life.
  */
 
-#include "sched.h"
+#define VERSION "CanSatJun v0.0.1 built " __TIMESTAMP__
+
 #include "chute.h"
 #include "telemetry.h"
 #include "sensors.h"
+#include "indication.h"
 
-struct telemPacketStruct_t mainTelem;
-
-sSched_t mainScheduler;
-
-
-void job_blink(void *);
+unsigned long int lastImu = 0;
+unsigned long int lastAll = 0;
 
 void setup()
 {
     Serial.begin(9600);
 
-    sensors_init(&mainScheduler);
-    telem_init(&mainScheduler);
+    sensors_init();
+    telem_init();
 
     chute_lock();
 
-    Serial.println("Init OK");
+    indicators_init();
+
+    telem_sendMessage("Init OK");
+    telem_sendMessage(VERSION);
+
+    sensors_selfTest();
+
+    indicators_showCharge();
+    delay(3000);
 }
 
 void loop()
 {
-    if (millis() % 250 == 0) {
-        job_sensors_readIMU(NULL);
-        job_telem_sendVerbose(NULL);
+    if (millis() - lastImu >= 250) {
+        telem_sendVerbose();
+        indicators_showStatus();
+
+        lastImu = millis();
     }
 
-    if (millis() % 500 == 0) {
-        job_sensors_readAll(NULL);
-        job_telem_sendBasic(NULL);
+    if (millis() - lastAll >= 500) {
+        telem_sendBasic();
+
+        lastAll = millis();
     }
+
+    sensors_read();
 }
 

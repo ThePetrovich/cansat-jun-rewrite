@@ -17,7 +17,7 @@ void adxl345_init()
     Wire.write(ADXL345_CTRL_2D_VALUE);     
     Wire.endTransmission();
 
-    delay(50);
+    _delay_ms(5);
 
     Wire.beginTransmission(ADXL345_ADDRESS);
     Wire.write(ADXL345_CTRL_FORMAT);
@@ -25,43 +25,38 @@ void adxl345_init()
     Wire.endTransmission();
 }
 
-double adxl345_readAcceleration(byte r1, byte r2)
+static int adxl345_readAcceleration(byte r1, byte r2)
 {
-    int a0 = 0;
-    int a1 = 0;
-    int aOut = 0;
-    double aG = 0;
+    int data = 0;
 
     Wire.beginTransmission(ADXL345_ADDRESS);
     Wire.write(r1);
     Wire.write(r2);
     Wire.endTransmission();
 
-    delay(2);
+    Wire.requestFrom(ADXL345_ADDRESS, 2); 
+
+    _delay_ms(5);
 
     if (Wire.available() >= 2) {
-        a0 = Wire.read();
-        a1 = Wire.read(); 
-        a1 = a1 << 8;
-        aOut = a0 + a1;   
+        data = Wire.read();
+        data |= ((int)Wire.read()) << 8; 
     }
 
-    aG = (aOut / 32.0) * 100.0;
-
-    return aG;
+    return (data >> 5) * 100;
 }
 
 int adxl345_readX()
 {
-    return (int)adxl345_readAcceleration(ADXL345_OUT_X0, ADXL345_OUT_X1);
+    return adxl345_readAcceleration(ADXL345_OUT_X0, ADXL345_OUT_X1);
 }
 
 int adxl345_readY()
 {
-    return (int)adxl345_readAcceleration(ADXL345_OUT_Y0, ADXL345_OUT_Y1);
+    return adxl345_readAcceleration(ADXL345_OUT_Y0, ADXL345_OUT_Y1);
 }
 
 int adxl345_readZ()
 {
-    return (int)adxl345_readAcceleration(ADXL345_OUT_Z0, ADXL345_OUT_Z1);
+    return adxl345_readAcceleration(ADXL345_OUT_Z0, ADXL345_OUT_Z1);
 }

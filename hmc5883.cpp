@@ -18,7 +18,7 @@ void hmc5883_init()
     Wire.endTransmission();
 }
 
-int hmc5883_readData(byte r1)
+static int hmc5883_readData(byte r1)
 {
     int data = 0;
 
@@ -27,7 +27,7 @@ int hmc5883_readData(byte r1)
     Wire.endTransmission();
     Wire.requestFrom(HMC5883_ADDRESS, 2);
 
-    delay(2);
+    _delay_ms(5);
 
     if (Wire.available() >= 2) {
         data = ((int)Wire.read()) << 8;
@@ -50,5 +50,5 @@ int hmc5883_readY()
 
 int hmc5883_readZ()
 {
-    return hmc5883_readData(HMC5883_OUT_Z);;
+    return hmc5883_readData(HMC5883_OUT_Z);
 }

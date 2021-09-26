@@ -11,12 +11,7 @@
 #include "sensors.h"
 #include "chute.h"
 #include "telemetry.h"
-//#include "sched.h"
-//#include "jobs.h"
-
-/* ОСТОРОЖНО! Глобальная структура, должна быть объявлена в cansat-jun-rewrite.ino */
-/* ничего умнее не придумал ахахаха */
-extern struct telemPacketStruct_t mainTelem;
+#include "pins.h"
 
 Servo chuteServo;
 
@@ -34,7 +29,7 @@ void chute_lock()
 
     /* Ждем, пока аппарат не будет установлен на ракету */
 	while (analogRead(SENSOR_LIGHT) + 50 >= mainTelem.lightInside) {
-		Serial.println(F("Waiting for installation"));
+		telem_sendMessage("Waiting for installation");
 		delay(500);
 	}
 
@@ -46,26 +41,28 @@ void chute_lock()
 
 	chuteServo.detach();
 
-    Serial.println(F("Chute locked"));
+    telem_sendMessage("Chute locked");
 }
 
 unsigned long int deployStart = 0;
 
-void chute_deploy(int delay)
+void chute_deploy(int time)
 {
     if (deployStart == 0) {
         deployStart = millis();
 
-        Serial.print(F("------ Deploy at "));
-        Serial.print(String(millis()));
-        Serial.println(F(" ------"));
+        telem_sendMessage("------ Deploy at ");
+        telem_sendMessage(String(millis()));
+        telem_sendMessage(" ------");
+    }
 
+    if ((millis() - deployStart) >= time) {
         chuteServo.attach(CHUTE_SERVOPIN);
         chuteServo.write(5);
     }
 
-    if ((millis() - deployStart) >= delay) {
+    if ((millis() - deployStart) >= time + 2000) {
         chuteServo.detach();
-        mainTelem.recoveryPoint = true; 
+        mainTelem.recoveryPoint = 1; 
     }
 }
