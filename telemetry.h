@@ -9,6 +9,8 @@
 #ifndef _CJUN_TELEM_H
 #define _CJUN_TELEM_H
 
+#define TEAM_ID "CS"
+
 struct telemPacketStruct_t 
 {
     char teamId[3];

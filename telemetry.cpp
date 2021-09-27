@@ -17,7 +17,6 @@
 struct telemPacketStruct_t mainTelem;
 struct telemStatusStruct_t mainStatus;
 
-
 SoftwareSerial radio(TELEM_RXPIN, TELEM_TXPIN);
 
 void telem_init()
@@ -36,8 +35,8 @@ void telem_sendMessage(String msg)
 void telem_sendBasic()
 {
     Serial.println("Sending data");
-    char data[100] = "";
-    sprintf(data, "%s;%ld;%d;%d;%d;%d;%d;%d ",  "CS", 
+    char data[150] = "";
+    snprintf(data, 148, "%s;%ld;%d;%d;%d;%d;%d;%d ", TEAM_ID, 
                                                 millis(), 
                                                 mainTelem.altitude, 
                                                 mainTelem.a, 
@@ -53,12 +52,12 @@ void telem_sendBasic()
 void telem_sendVerbose()
 {
     Serial.println("Sending data");
-    char data[200] = "";
+    char data[250] = "";
 
     File dataFile = SD.open("cosmo14.log", FILE_WRITE);
 
     /* 0,1,2 = aX,aY,aZ; 3,4,5 = mX,mY,mZ; 6,7,8 = hX,hY,hZ */
-    sprintf(data, "%s;%ld;%d;%d;%d;%d;%d;%d;%d;%d;%d;%d;%ld;%d;%d;%d;%d;%d;","CS", 
+    snprintf(data, 248, "%s;%ld;%d;%d;%d;%d;%d;%d;%d;%d;%d;%d;%ld;%d;%d;%d;%d;%d;",TEAM_ID, 
                                                                             millis(), 
                                                                             mainTelem.altitude, 
                                                                             mainTelem.rawIMU[0], 
