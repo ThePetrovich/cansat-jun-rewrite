@@ -24,7 +24,7 @@ void chute_lock()
 	delay(250);
 
     /* Смотрим на свет внутри ракеты/чехла */
-    /* Т.е. определяем минимальный уровень для открытия */
+    /* Определяем минимальный уровень для открытия */
 	mainTelem.lightInside = analogRead(SENSOR_LIGHT);
 
     /* Ждем, пока аппарат не будет установлен на ракету */
@@ -46,9 +46,11 @@ void chute_lock()
 
 unsigned long int deployStart = 0;
 
-void chute_deploy(int time)
+void chute_deploy(unsigned int time)
 {
+    /* Если сигнал на раскрытие получен в первый раз... */
     if (deployStart == 0) {
+        /* ...запоминаем время получения сигнала и отписываемся на землю */
         deployStart = millis();
 
         telem_sendMessage("------ Deploy at ");
@@ -56,11 +58,13 @@ void chute_deploy(int time)
         telem_sendMessage(" ------");
     }
 
+    /* Если прошло регламентное время задержки раскрытия (5 сек.), вскрываемся */
     if ((millis() - deployStart) >= time) {
         chuteServo.attach(CHUTE_SERVOPIN);
         chuteServo.write(5);
     }
 
+    /* Даем время сервоприводу на срабатывание и выставляем флаг recoveryPoint */
     if ((millis() - deployStart) >= time + 2000) {
         chuteServo.detach();
         mainTelem.recoveryPoint = 1; 

@@ -78,7 +78,7 @@ void sensors_read()
     }
 
     if (mainTelem.separatePoint && !mainTelem.recoveryPoint) {
-        chute_deploy(2000);
+        chute_deploy(SENSORS_CHUTE_DELAY);
     }
 }
 

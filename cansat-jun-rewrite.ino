@@ -1,13 +1,14 @@
 /*
  * cansat-jun-rewrite.ino
- * Version: 0.0.1
+ * Version: 0.0.2
  * 
  * Created: 28.06.2021 12:12:39
  * Author: ThePetrovich
  * Rewriting cansat-jun from scratch because fuck my life.
  */
 
-#define VERSION "CanSatJun v0.0.1 built " __TIMESTAMP__
+
+#define VERSION "CanSatJun v0.0.2 built " __TIMESTAMP__
 
 #include "chute.h"
 #include "telemetry.h"

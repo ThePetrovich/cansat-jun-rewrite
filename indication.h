@@ -1,3 +1,11 @@
+/*
+ * indication.h
+ * 
+ * Created: Some time in the past
+ * Author: ThePetrovich
+ */
+
+
 #ifndef _CJUN_INDICATION_H
 #define _CJUN_INDICATION_H
 

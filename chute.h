@@ -12,6 +12,6 @@
 void chute_init();
 
 void chute_lock();
-void chute_deploy(int time);
+void chute_deploy(unsigned int time);
 
 #endif /* _CJUN_CHUTE_H */

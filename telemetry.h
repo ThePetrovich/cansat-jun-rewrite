@@ -39,7 +39,7 @@ struct telemStatusStruct_t
     short int init;
 };
 
-/* ОСТОРОЖНО! Глобальная структура, должна быть объявлена в telemetry.cpp */
+/* ОСТОРОЖНО! ГИГАНТСКИЙ КОСТЫЛЬ! Глобальная структура, должна быть объявлена в telemetry.cpp */
 /* ничего умнее не придумал ахахаха */
 extern struct telemPacketStruct_t mainTelem;
 extern struct telemStatusStruct_t mainStatus;

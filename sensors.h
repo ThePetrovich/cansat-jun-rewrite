@@ -12,6 +12,7 @@
 #define SENSOR_VREF 5.0F
 #define SENSOR_VDIV 2
 #define SENSOR_LIGHT_THRESHOLD 450
+#define SENSORS_CHUTE_DELAY 5000
 
 void sensors_init();
 

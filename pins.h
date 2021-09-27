@@ -5,7 +5,7 @@
 
 #define S_DATA 9
 #define S_CLK 10
-#define S_SCLK 11
+#define S_LATCH 11
 #define S_MR 5
 
 #define SENSOR_BAT A0
