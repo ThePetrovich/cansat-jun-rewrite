@@ -43,7 +43,7 @@ static int adxl345_readAcceleration(byte r1, byte r2)
         data |= ((int)Wire.read()) << 8; 
     }
 
-    return (data >> 5) * 100;
+    return ((float)data / 32.0) * 100;
 }
 
 int adxl345_readX()

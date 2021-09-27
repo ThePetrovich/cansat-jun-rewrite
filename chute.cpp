@@ -62,11 +62,12 @@ void chute_deploy(unsigned int time)
     if ((millis() - deployStart) >= time) {
         chuteServo.attach(CHUTE_SERVOPIN);
         chuteServo.write(5);
-    }
-
-    /* Даем время сервоприводу на срабатывание и выставляем флаг recoveryPoint */
-    if ((millis() - deployStart) >= time + 2000) {
+        delay(2000);
         chuteServo.detach();
         mainTelem.recoveryPoint = 1; 
     }
+
+    /* Даем время сервоприводу на срабатывание и выставляем флаг recoveryPoint */
+    //if ((millis() - deployStart) >= time + 2000) {  
+    //}
 }

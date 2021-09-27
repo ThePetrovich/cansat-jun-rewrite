@@ -22,6 +22,7 @@ SoftwareSerial radio(TELEM_RXPIN, TELEM_TXPIN);
 void telem_init()
 {   
     radio.begin(9600);
+    pinMode(TELEM_SDCSPIN, OUTPUT);
     SD.begin(TELEM_SDCSPIN);
 }
 
@@ -77,6 +78,7 @@ void telem_sendVerbose()
                                                                             mainTelem.landingPoint);
 
     Serial.println(data);
+    radio.println(data);
     
     if (dataFile) {
         dataFile.println(data);

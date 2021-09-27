@@ -65,15 +65,15 @@ void sensors_read()
     mainTelem.vbat = ((float)analogRead(SENSOR_BAT) / 1024.0) * SENSOR_VREF * SENSOR_VDIV * 10; 
     mainTelem.light = analogRead(SENSOR_LIGHT);
 
-    if (mainTelem.a > 12 && !mainTelem.startPoint) {
+    if (mainTelem.a > 160 && !mainTelem.startPoint) {
         mainTelem.startPoint = 1;
     }
 
-    if (mainTelem.a > 12 && mainTelem.recoveryPoint) {
+    if (mainTelem.a > 160 && mainTelem.recoveryPoint) {
         mainTelem.landingPoint = 1;
     }
 
-    if (mainTelem.light >= mainTelem.lightInside && !mainTelem.separatePoint) {
+    if (mainTelem.light >= mainTelem.lightInside && !mainTelem.separatePoint && mainTelem.startPoint) {
         mainTelem.separatePoint = 1;
     }
 
