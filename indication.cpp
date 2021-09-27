@@ -9,6 +9,8 @@ void indicators_init()
     pinMode(S_CLK, OUTPUT);
     pinMode(S_SCLK, OUTPUT);
     pinMode(S_MR, OUTPUT);
+
+    pinMode(TEST_BTN, INPUT);
 }
 
 void indicators_showCharge()
@@ -26,16 +28,23 @@ void indicators_showCharge()
 
 void indicators_showStatus()
 {
-    byte out = 0;
+    byte out = (mainTelem.startPoint << IND_LED_LAUNCH)
+            | (mainTelem.separatePoint << IND_LED_SEP)
+            | (mainTelem.recoveryPoint << IND_LED_DEPLOY)
+            | (mainTelem.landingPoint << IND_LED_LAND);
 
-    out = (((mainTelem.vbat > 50) ? 1 : 0) << IND_LED_BAT) 
-        | (1 << IND_LED_RXEN) 
-        | (mainTelem.ready << IND_LED_RDY)
-        | (mainTelem.test << IND_LED_TEST)
-        | (mainTelem.startPoint << IND_LED_LAUNCH)
-        | (mainTelem.separatePoint << IND_LED_SEP)
-        | (mainTelem.recoveryPoint << IND_LED_DEPLOY)
-        | (mainTelem.landingPoint << IND_LED_LAND);
+    if (!digitalRead(TEST_BTN)) {
+        out |= (((mainTelem.vbat > 76) ? 1 : 0) << IND_LED_BAT) 
+            | (1 << IND_LED_RXEN) 
+            | (mainTelem.ready << IND_LED_RDY)
+            | (mainTelem.test << IND_LED_TEST);
+    }
+    else {
+        out |= (mainStatus.adxl << IND_LED_ADXL)
+            | (mainStatus.l3g << IND_LED_L3G)
+            | (mainStatus.hmc << IND_LED_HMC)
+            | (mainStatus.bmp << IND_LED_BMP);
+    }
 
     digitalWrite(S_SCLK, 0);
 
