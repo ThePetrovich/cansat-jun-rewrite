@@ -15,6 +15,9 @@
 #define TELEM_RXPIN 6
 #define TELEM_SDCSPIN 4
 
+#define GPS_RXPIN 8
+#define GPS_TXPIN 7
+
 #define TEST_BTN 7
 #define SPEAKER 8 /* TODO: починить пины */
 

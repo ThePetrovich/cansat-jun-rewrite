@@ -1,6 +1,6 @@
 /*
  * cansat-jun-rewrite.ino
- * Version: 0.0.2
+ * Version: 0.0.3
  * 
  * Created: 28.06.2021 12:12:39
  * Author: ThePetrovich
@@ -8,15 +8,17 @@
  */
 
 
-#define VERSION "CanSatJun v0.0.2 built " __TIMESTAMP__
+#define VERSION "CanSatJun v0.0.3 built " __TIMESTAMP__
 
 #include "chute.h"
 #include "telemetry.h"
 #include "sensors.h"
 #include "indication.h"
+#include "nmea.h"
 
 unsigned long int lastImu = 0;
 unsigned long int lastAll = 0;
+unsigned long int lastGPS = 0;
 
 void setup()
 {
@@ -36,6 +38,8 @@ void setup()
 
     indicators_showCharge();
     delay(3000);
+
+    nmea_init();
 }
 
 void loop()
@@ -54,5 +58,11 @@ void loop()
     }
 
     sensors_read();
+
+    if (millis() - lastGPS >= 5000) {
+        nmea_load();
+        telem_sendGPS();
+        lastGPS = millis();
+    }
 }
 

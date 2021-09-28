@@ -48,16 +48,17 @@ void indicators_showStatus()
 {   
     /* Хитрая битовая арифметрика для включения нужных лампочек */
     /* Выставляем биты в переменной через побитовый сдвиг, погуглите что это */
-    byte out = (mainTelem.startPoint << IND_LED_LAUNCH)
-            | (mainTelem.separatePoint << IND_LED_SEP)
-            | (mainTelem.recoveryPoint << IND_LED_DEPLOY)
-            | (mainTelem.landingPoint << IND_LED_LAND);
+    byte out = 0;
+    out |= ((byte)mainTelem.startPoint << IND_LED_LAUNCH)
+        | ((byte)mainTelem.separatePoint << IND_LED_SEP)
+        | (byte)(mainTelem.recoveryPoint << IND_LED_DEPLOY)
+        | ((byte)mainTelem.landingPoint << IND_LED_LAND);
 
     //if (!digitalRead(TEST_BTN)) {
-        out |= (((mainTelem.vbat > 70) ? 1 : 0) << IND_LED_BAT) 
-            | (1 << IND_LED_RXEN) 
-            | (mainTelem.ready << IND_LED_RDY)
-            | (mainTelem.test << IND_LED_TEST);
+    out |= (((mainTelem.vbat > 70) ? 1 : 0) << IND_LED_BAT) 
+        | (1 << IND_LED_RXEN) 
+        | ((byte)mainTelem.ready << IND_LED_RDY)
+        | ((byte)mainTelem.test << IND_LED_TEST);
     //}
     //else {
         /* Если в тестовом режиме, ставим другие биты */
@@ -70,7 +71,7 @@ void indicators_showStatus()
     /* Пишем в регистр */
     digitalWrite(S_LATCH, 0);
 
-    shiftOut(S_DATA, S_CLK, LSBFIRST, out);
+    shiftOut(S_DATA, S_CLK, MSBFIRST, out);
 
     digitalWrite(S_LATCH, 1); 
 }

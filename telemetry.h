@@ -51,5 +51,6 @@ void telem_sendMessage(String msg);
 
 void telem_sendBasic();
 void telem_sendVerbose();
+void telem_sendGPS();
 
 #endif /* _CJUN_TELEM_H */

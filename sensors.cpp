@@ -84,48 +84,29 @@ void sensors_read()
 
 void sensors_selfTest()
 {
-    telem_sendMessage("Running Power-On Self Test (POST)");
+    telem_sendMessage("Running POST");
 
     sensors_read();
 
     if (mainTelem.rawIMU[0] + mainTelem.rawIMU[1] + mainTelem.rawIMU[2] != 0) {
         mainStatus.adxl = 1;
-        telem_sendMessage("ADXL OK");
-    }
-    else {
-        telem_sendMessage("ADXL FAIL");
     }
 
     if (mainTelem.rawIMU[3] + mainTelem.rawIMU[4] + mainTelem.rawIMU[5] != 0) {
         mainStatus.hmc = 1;
-        telem_sendMessage("HMC OK");
-    }
-    else {
-        telem_sendMessage("HMC FAIL");
     }
 
     if (mainTelem.rawIMU[6] + mainTelem.rawIMU[7] + mainTelem.rawIMU[8] != 0) {
         mainStatus.l3g = 1;
-        telem_sendMessage("L3G OK");
-    }
-    else {
-        telem_sendMessage("L3G FAIL");
     }
 
     if (mainTelem.pressure != 0) {
         mainStatus.bmp = 1;
-        telem_sendMessage("BMP OK");
-    }
-    else {
-        telem_sendMessage("BMP FAIL");
     }
 
     if (mainStatus.adxl + mainStatus.hmc + mainStatus.l3g + mainStatus.bmp == 4) {
         mainStatus.init = 1;
         mainTelem.ready = 1;
-        telem_sendMessage("POST PASS");
-    }
-    else {
-        telem_sendMessage("POST FAIL");
+        telem_sendMessage("POST OK");
     }
 }
