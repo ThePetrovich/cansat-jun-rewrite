@@ -54,19 +54,21 @@ void indicators_showStatus()
         | (byte)(mainTelem.recoveryPoint << IND_LED_DEPLOY)
         | ((byte)mainTelem.landingPoint << IND_LED_LAND);
 
-    //if (!digitalRead(TEST_BTN)) {
-    out |= (((mainTelem.vbat > 70) ? 1 : 0) << IND_LED_BAT) 
-        | (1 << IND_LED_RXEN) 
-        | ((byte)mainTelem.ready << IND_LED_RDY)
-        | ((byte)mainTelem.test << IND_LED_TEST);
-    //}
-    //else {
+    if (!digitalRead(TEST_BTN)) {
+        mainTelem.test = 0;
+        out |= (((mainTelem.vbat > 70) ? 1 : 0) << IND_LED_BAT) 
+            | ((analogRead(SENSOR_RXEN) > 700 ? 1 : 0) << IND_LED_RXEN) 
+            | ((byte)mainTelem.ready << IND_LED_RDY)
+            | ((byte)mainTelem.test << IND_LED_TEST);
+    }
+    else {
         /* Если в тестовом режиме, ставим другие биты */
-    //    out |= (mainStatus.adxl << IND_LED_ADXL)
-    //        | (mainStatus.l3g << IND_LED_L3G)
-    //        | (mainStatus.hmc << IND_LED_HMC)
-    //        | (mainStatus.bmp << IND_LED_BMP);
-    //}
+        mainTelem.test = 1;
+        out |= (mainStatus.adxl << IND_LED_ADXL)
+            | (mainStatus.l3g << IND_LED_L3G)
+            | (mainStatus.hmc << IND_LED_HMC)
+            | (mainStatus.bmp << IND_LED_BMP);
+    }
 
     /* Пишем в регистр */
     digitalWrite(S_LATCH, 0);

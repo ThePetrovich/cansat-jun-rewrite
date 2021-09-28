@@ -80,6 +80,10 @@ void sensors_read()
     if (mainTelem.separatePoint && !mainTelem.recoveryPoint) {
         chute_deploy(SENSORS_CHUTE_DELAY);
     }
+
+    if (mainTelem.recoveryPoint) {
+        analogWrite(SPEAKER, 127);
+    }
 }
 
 void sensors_selfTest()

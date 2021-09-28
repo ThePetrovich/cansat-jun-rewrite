@@ -10,6 +10,7 @@
 
 #define SENSOR_BAT A0
 #define SENSOR_LIGHT A2
+#define SENSOR_RXEN A3
 
 #define TELEM_TXPIN 5
 #define TELEM_RXPIN 6
@@ -19,6 +20,6 @@
 #define GPS_TXPIN 7
 
 #define TEST_BTN 7
-#define SPEAKER 8 /* TODO: починить пины */
+#define SPEAKER 6 /* TODO: починить пины */
 
 #endif
