@@ -20,8 +20,8 @@ void chute_lock()
     /* Разблокируем механизм на старте */
     chuteServo.attach(CHUTE_SERVOPIN);
 	chuteServo.write(5);
+    delay(2000);
 	chuteServo.detach();
-	delay(2000);
 
     /* Смотрим на свет внутри ракеты/чехла */
     /* Определяем минимальный уровень для открытия */
