@@ -25,4 +25,4 @@ extern struct GPS_t GPS;
 void nmea_init();
 unsigned char nmea_getNumberCode(char chr);
 unsigned char nmea_strCompare(char * a, char * b,unsigned char  len);
-unsigned char nmea_load();
+void nmea_load();

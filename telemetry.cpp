@@ -39,7 +39,7 @@ void telem_sendMessage(String msg)
 void telem_sendBasic()
 {
     char data[150] = "";
-    snprintf(data, 148, "%s;%ld;%d;%d;%d;%d;%d;%d;", TEAM_ID, 
+    snprintf(data, 148, "%s;%ld;%d;%d;%d;%d;%d;%d \n", TEAM_ID, 
                                                 millis(), 
                                                 mainTelem.altitude, 
                                                 mainTelem.a, 
@@ -48,33 +48,32 @@ void telem_sendBasic()
                                                 mainTelem.recoveryPoint, 
                                                 mainTelem.landingPoint);
 
-    Serial.println(data);
-    radio.println(data);
+    Serial.print(data);
+    radio.print(data);
 }
 
 void telem_sendGPS()
 {
     char data[150] = "";
-    snprintf(data, 148, "%s;%ld;GPS;%d;%s;%s;", TEAM_ID, 
+    snprintf(data, 148, "%s;%ld;GPS;%d;%s;%s \n", TEAM_ID, 
                                         millis(), 
                                         GPS.Sats,
                                         GPS.latitude,
                                         GPS.longitude);
 
-    Serial.println(data);
-    radio.println(data);
+    Serial.print(data);
+    radio.print(data);
 }
 
 void telem_sendVerbose()
 {
-    Serial.println("Sending data");
     char data[250] = "";
 
     dataFile = SD.open("cosmo14.log", FILE_WRITE);
     
     if (dataFile) {
         /* 0,1,2 = aX,aY,aZ; 3,4,5 = mX,mY,mZ; 6,7,8 = hX,hY,hZ */
-        snprintf(data, 248, "%s;%ld;%d;%d;%d;%d;%d;%d;%d;%d;%d;%d;%ld;%d;%d;%d;%d;%d;",TEAM_ID, 
+        snprintf(data, 248, "%s;%ld;%d;%d;%d;%d;%d;%d;%d;%d;%d;%d;%ld;%d;%d;%d;%d;%d \n",TEAM_ID, 
                                                                                 millis(), 
                                                                                 mainTelem.altitude, 
                                                                                 mainTelem.rawIMU[0], 
@@ -92,7 +91,7 @@ void telem_sendVerbose()
                                                                                 mainTelem.separatePoint, 
                                                                                 mainTelem.recoveryPoint, 
                                                                                 mainTelem.landingPoint);
-        dataFile.println(data);
+        dataFile.print(data);
         dataFile.close();
     }
 }

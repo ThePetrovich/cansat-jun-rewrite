@@ -32,7 +32,7 @@ unsigned char nmea_getNumberCode(char chr)
 		return 0xFF;
 }
 
-unsigned char nmea_strCompare(char * a, char * b, unsigned char len)
+unsigned char nmea_strCompare(char * a, const char * b, unsigned char len)
 {
 	unsigned char i;
 	for (i = 0; i < len; i++)
@@ -110,7 +110,7 @@ static void nmea_process(char data)
 	}
 }
 
-unsigned char nmea_load()
+void nmea_load()
 {
 	while (gps.available()) {
 		char data = gps.read();
