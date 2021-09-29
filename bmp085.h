@@ -42,8 +42,6 @@ unsigned long bmp085_readUP();
 
 int bmp085_getTemperature(unsigned int ut);
 long bmp085_getPressure(unsigned long up);
-
-/* !!! высота в ДЕЦИМЕТРАХ !!! */
-int bmp085_calcAltitude(int prs);
+int bmp085_calcAltitude(long int prs);
 
 #endif /* _CJUN_BMP085_H */

@@ -158,9 +158,8 @@ unsigned long bmp085_readUP()
     return up;
 }
 
-int bmp085_calcAltitude(int prs)
+int bmp085_calcAltitude(long int prs)
 {
     if (prs == 0) return -1;
-    /* вот это вообще прикол какой-то, тут высота в дециметрах и в инте */
-    return (int)(44330.0 * (1.0 - pow((float) prs / ASL, 0.1903))) * 10;
+    return (int)((44330.0 * (1.0 - pow((float) prs / ASL, 0.1903))));
 }
