@@ -62,7 +62,7 @@ void sensors_read()
     mainTelem.temperature = bmp085_getTemperature(bmp085_readUT());
     mainTelem.pressure = bmp085_getPressure(bmp085_readUP());
     mainTelem.altitude = bmp085_calcAltitude(mainTelem.pressure) - baseAlt;
-    mainTelem.vbat = ((float)analogRead(SENSOR_BAT) / 1024.0) * SENSOR_VREF * SENSOR_VDIV * 10; 
+    mainTelem.vbat = ((float)analogRead(SENSOR_BAT) / 1024.0) * SENSOR_VREF * SENSOR_VDIV * 100; 
     mainTelem.light = analogRead(SENSOR_LIGHT);
 
     if (mainTelem.a > 160 && !mainTelem.startPoint) {

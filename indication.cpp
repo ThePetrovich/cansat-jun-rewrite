@@ -31,7 +31,7 @@ void indicators_showCharge()
 
     /* Дытаемся угадать напряжение на батарее */
     /* Диапазон от 9 до 7 В, 7 В = 0 лампочек */
-	int n = (mainTelem.vbat - 60) / 2;
+	int n = (mainTelem.vbat - 650) / 30;
 
     /* Не выходим за границы массива */
 	if (n > 8) n = 8;
@@ -56,7 +56,7 @@ void indicators_showStatus()
 
     if (!digitalRead(TEST_BTN)) {
         mainTelem.test = 0;
-        out |= (((mainTelem.vbat > 70) ? 1 : 0) << IND_LED_BAT) 
+        out |= (((mainTelem.vbat > 740) ? 1 : 0) << IND_LED_BAT) 
             | ((analogRead(SENSOR_RXEN) > 700 ? 1 : 0) << IND_LED_RXEN) 
             | ((byte)mainTelem.ready << IND_LED_RDY)
             | ((byte)mainTelem.test << IND_LED_TEST);

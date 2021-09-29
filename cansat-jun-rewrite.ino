@@ -1,6 +1,6 @@
 /*
  * cansat-jun-rewrite.ino
- * Version: 0.0.3
+ * Version: 0.0.4
  * 
  * Created: 28.06.2021 12:12:39
  * Author: ThePetrovich
@@ -8,7 +8,7 @@
  */
 
 
-#define VERSION "CanSatJun v0.0.3 built " __TIMESTAMP__
+#define VERSION "CanSatJun v0.0.4 built " __TIMESTAMP__
 
 #include "chute.h"
 #include "telemetry.h"
@@ -27,8 +27,6 @@ void setup()
     sensors_init();
     telem_init();
 
-    chute_lock();
-
     indicators_init();
 
     telem_sendMessage("Init OK");
@@ -38,6 +36,8 @@ void setup()
 
     indicators_showCharge();
     delay(3000);
+
+    chute_lock();
 
     nmea_init();
 }
