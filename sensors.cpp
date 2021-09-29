@@ -30,6 +30,7 @@ void sensors_init()
 	
 	gyro.enableDefault();
 	
+    
 	bmp085_init();
 	float temp = 0;
 	bmp085_getTemperature(bmp085_readUT()); 
