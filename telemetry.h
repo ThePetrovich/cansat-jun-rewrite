@@ -28,7 +28,7 @@ struct telemPacketStruct_t
     short int landingPoint; /* Флаг приземления */
     long int pressure; /* Давление в Па */
     int temperature; /* Температура в град. C * 10 */
-    int rawIMU[9]; /* 0,1,2 = aX,aY,aZ; 3,4,5 = mX,mY,mZ; 6,7,8 = hX,hY,hZ */
+    long int rawIMU[9]; /* 0,1,2 = aX,aY,aZ; 3,4,5 = mX,mY,mZ; 6,7,8 = hX,hY,hZ */
     /* !!! a, aX, aY, aZ, temperature УМНОЖЕНЫ НА 10, vbat УМНОЖЕН НА 100 !!! */
     /* остальное всё как есть */
 };
