@@ -29,6 +29,8 @@ void telem_init()
     SD.begin(TELEM_SDCSPIN);
 
     dataFile = SD.open("cosmo14.log", FILE_WRITE | O_TRUNC);
+    dataFile.print("");
+    dataFile.close();
 }
 
 void telem_sendMessage(String msg)
@@ -70,6 +72,8 @@ void telem_sendGPS()
 void telem_sendVerbose()
 {
     char data[250] = "";
+
+    dataFile = SD.open("cosmo14.log", FILE_WRITE);
     
     if (dataFile) {
         /* 0,1,2 = aX,aY,aZ; 3,4,5 = mX,mY,mZ; 6,7,8 = hX,hY,hZ */
@@ -92,5 +96,6 @@ void telem_sendVerbose()
                                                                                 mainTelem.recoveryPoint, 
                                                                                 mainTelem.landingPoint);
         dataFile.print(data);
+        dataFile.close();
     }
 }
