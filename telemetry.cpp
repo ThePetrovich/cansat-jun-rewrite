@@ -27,6 +27,8 @@ void telem_init()
     radio.begin(9600);
     pinMode(TELEM_SDCSPIN, OUTPUT);
     SD.begin(TELEM_SDCSPIN);
+
+    dataFile = SD.open("cosmo14.log", FILE_WRITE | O_TRUNC);
 }
 
 void telem_sendMessage(String msg)
@@ -67,13 +69,11 @@ void telem_sendGPS()
 
 void telem_sendVerbose()
 {
-    char data[320] = "";
-
-    dataFile = SD.open("cosmo14.log", FILE_WRITE);
+    char data[250] = "";
     
     if (dataFile) {
         /* 0,1,2 = aX,aY,aZ; 3,4,5 = mX,mY,mZ; 6,7,8 = hX,hY,hZ */
-        snprintf(data, 318, "%s;%ld;%d;%d;%d;%d;%d;%d;%d;%d;%d;%d;%ld;%d;%d;%d;%d;%d \n",TEAM_ID, 
+        snprintf(data, 248, "%s;%ld;%d;%d;%d;%d;%d;%d;%d;%d;%d;%d;%ld;%d;%d;%d;%d;%d \n",TEAM_ID, 
                                                                                 millis(), 
                                                                                 mainTelem.altitude, 
                                                                                 mainTelem.rawIMU[0], 
@@ -92,6 +92,5 @@ void telem_sendVerbose()
                                                                                 mainTelem.recoveryPoint, 
                                                                                 mainTelem.landingPoint);
         dataFile.print(data);
-        dataFile.close();
     }
 }

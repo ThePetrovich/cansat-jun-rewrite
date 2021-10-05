@@ -12,8 +12,7 @@
 #include "telemetry.h"
 #include "chute.h"
 #include "l3g4200d.h"
-#include "adxl345.h"
-#include "hmc5883.h"
+#include "imu.h"
 #include "bmp085.h"
 #include "pins.h"
 
