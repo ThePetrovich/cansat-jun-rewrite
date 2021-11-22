@@ -9,7 +9,6 @@
 #include <Arduino.h>
 #include <SPI.h>
 #include <SD.h>
-#include <SoftwareSerial.h>
 #include <stdio.h>
 #include "telemetry.h"
 #include "pins.h"
@@ -20,11 +19,9 @@ struct telemStatusStruct_t mainStatus;
 
 File dataFile;
 
-SoftwareSerial radio(TELEM_RXPIN, TELEM_TXPIN);
-
 void telem_init()
 {   
-    radio.begin(9600);
+    Serial1.begin(9600);
     pinMode(TELEM_SDCSPIN, OUTPUT);
     SD.begin(TELEM_SDCSPIN);
 
@@ -35,8 +32,7 @@ void telem_init()
 
 void telem_sendMessage(String msg)
 {
-    Serial.println(msg);
-    radio.println(msg);
+    Serial1.println(msg);
 }
 
 /* TeamID;Time;Altitude;A;Start point;Separate point;Recovery point;Landing point \n  */
@@ -52,8 +48,7 @@ void telem_sendBasic()
                                                 mainTelem.recoveryPoint, 
                                                 mainTelem.landingPoint);
 
-    Serial.print(data);
-    radio.print(data);
+    Serial1.print(data);
 }
 
 void telem_sendGPS()
@@ -65,8 +60,7 @@ void telem_sendGPS()
                                         GPS.latitude,
                                         GPS.longitude);
 
-    Serial.print(data);
-    radio.print(data);
+    Serial1.print(data);
 }
 
 void telem_sendVerbose()

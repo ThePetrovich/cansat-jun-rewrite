@@ -62,7 +62,7 @@ void chute_deploy(unsigned int time)
     if ((millis() - deployStart) >= time) {
         chuteServo.attach(CHUTE_SERVOPIN);
         chuteServo.write(5);
-        delay(2000);
+        delay(1000);
         chuteServo.detach();
         mainTelem.recoveryPoint = 1; 
     }
