@@ -22,12 +22,11 @@ File dataFile;
 void telem_init()
 {   
     Serial1.begin(9600);
+    
     pinMode(TELEM_SDCSPIN, OUTPUT);
-    SD.begin(TELEM_SDCSPIN);
-
-    dataFile = SD.open("cosmo14.log", FILE_WRITE | O_TRUNC);
-    dataFile.print("");
-    dataFile.close();
+    if (!SD.begin(TELEM_SDCSPIN)) {
+        Serial1.println(F("SD init fail"));
+    }
 }
 
 void telem_sendMessage(String msg)
@@ -65,24 +64,23 @@ void telem_sendGPS()
 
 void telem_sendVerbose()
 {
-    char data[250] = "";
+    char data[200] = "";
 
     dataFile = SD.open("cosmo14.log", FILE_WRITE);
     
     if (dataFile) {
-        /* 0,1,2 = aX,aY,aZ; 3,4,5 = mX,mY,mZ; 6,7,8 = hX,hY,hZ */
-        snprintf(data, 248, "%s;%ld;%d;%d;%d;%d;%d;%d;%d;%d;%d;%d;%ld;%d;%d;%d;%d;%d \n",TEAM_ID, 
+        snprintf(data, 198, "%s;%ld;%d;%ld;%ld;%ld;%ld;%ld;%ld;%ld;%ld;%ld;%ld;%d;%d;%d;%d;%d \n",TEAM_ID, 
                                                                                 millis(), 
                                                                                 mainTelem.altitude, 
-                                                                                mainTelem.rawIMU[0], 
-                                                                                mainTelem.rawIMU[1],
-                                                                                mainTelem.rawIMU[2],
-                                                                                mainTelem.rawIMU[6], 
-                                                                                mainTelem.rawIMU[7],
-                                                                                mainTelem.rawIMU[8],
-                                                                                mainTelem.rawIMU[3], 
-                                                                                mainTelem.rawIMU[4],
-                                                                                mainTelem.rawIMU[5],
+                                                                                mainTelem.aX, 
+                                                                                mainTelem.aY,
+                                                                                mainTelem.aZ,
+                                                                                mainTelem.mX, 
+                                                                                mainTelem.mY,
+                                                                                mainTelem.mZ,
+                                                                                mainTelem.gX, 
+                                                                                mainTelem.gY,
+                                                                                mainTelem.gZ,
                                                                                 mainTelem.pressure,
                                                                                 mainTelem.temperature,
                                                                                 mainTelem.startPoint, 

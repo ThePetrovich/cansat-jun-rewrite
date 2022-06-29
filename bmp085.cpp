@@ -7,7 +7,7 @@
 
 
 #include <Arduino.h>
-#include <Wire.h>
+#include "microWire.h"
 #include "bmp085.h"
 
 /* Калибровочные значения из даташита, не трогать */
