@@ -22,8 +22,6 @@ unsigned long int lastGPS = 0;
 
 void setup()
 {
-    Serial.begin(9600);
-
     sensors_init();
     telem_init();
 
@@ -32,14 +30,14 @@ void setup()
     telem_sendMessage("Init OK");
     telem_sendMessage(VERSION);
 
-    sensors_selfTest();
+    //sensors_selfTest();
+
+    mainTelem.startPoint = 1; 
 
     indicators_showCharge();
     delay(3000);
 
     chute_lock();
-
-    nmea_init();
 }
 
 void loop()

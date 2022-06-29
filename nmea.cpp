@@ -9,9 +9,6 @@
 #include "nmea.h"
 #include "pins.h"
 #include <Arduino.h>
-#include <SoftwareSerial.h>
-
-SoftwareSerial gps(GPS_RXPIN, GPS_TXPIN);
 
 char rmc_str[128];
 unsigned char rmc_index;
@@ -21,7 +18,8 @@ struct GPS_t GPS;
 
 void nmea_init()
 {
-	gps.begin(9600);
+	/* Do nothing */
+	return;
 }
 
 unsigned char nmea_getNumberCode(char chr)
@@ -112,8 +110,8 @@ static void nmea_process(char data)
 
 void nmea_load()
 {
-	while (gps.available()) {
-		char data = gps.read();
+	while (Serial1.available()) {
+		char data = Serial1.read();
 		nmea_process(data);
 	}
 }
